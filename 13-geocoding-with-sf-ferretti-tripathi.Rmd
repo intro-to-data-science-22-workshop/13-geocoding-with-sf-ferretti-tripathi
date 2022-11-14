@@ -1,0 +1,92 @@
+---
+title: "Geocoding "
+subtitle: "with the Simple Features (sf) package"
+author: "Lucrezia Flavia Ferretti and Vishal Tripathi"
+date: "21/11/2022"
+institute: "Hertie School" #"`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: [default, 'simons-touch.css', metropolis, metropolis-fonts] 
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      hash: true
+---
+
+```{css, echo=FALSE} 
+@media print { # print out incremental slides; see https://stackoverflow.com/questions/56373198/get-xaringan-incremental-animations-to-print-to-pdf/56374619#56374619
+  .has-continuation {
+    display: block !important;
+  }
+}
+```
+
+```{r setup, include=FALSE}
+# figures formatting setup
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  comment = "  ",
+  prompt = T,
+  fig.align="center", #fig.width=6, fig.height=4.5, 
+  # out.width="748px", #out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=F, #echo=F, warning=F, message=F
+  engine.opts = list(bash = "-l")
+  )
+## Next hook based on this SO answer: https://stackoverflow.com/a/39025054
+knit_hooks$set(
+  prompt = function(before, options, envir) {
+    options(
+      prompt = if (options$engine %in% c('sh','bash')) '$ ' else 'R> ',
+      continue = if (options$engine %in% c('sh','bash')) '$ ' else '+ '
+      )
+})
+library(tidyverse)
+library(nycflights13)
+library(modelsummary)
+library(kableExtra)
+```
+
+# Table of contents
+
+
+##1. What is geocoding?
+##2. Policy applications of geocoding 
+##3. Geocoding in R: Intro to sf
+##4. How to: sf 
+##5. Practical application
+##6. To do's: prepare for the workshop
+##5. Learn more: additional resources
+
+
+
+---
+class: inverse, center, middle
+name: projects
+
+# What is geocoding?
+<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
+
+---
+
+# Taming chaos
+
+.pull-left[
+**Definition**: Geocoding can be defined as the process of transforming the description of a location (a pair of coordinates, an address) to a location on the earth's surface.
+
+1. German Parliament: Platz der Republik 1, 11011 Berlin, Germany
+2. Coordinates: 52.51828, 13.37569
+3. Position on a map: 
+.pull-right[
+<br>
+<div align="center">
+<img src="pics/bundestag.png" height=400 loop=infinite>
+</div>
+]
+
+
+
