@@ -91,6 +91,7 @@ Geocoding can be defined as the process of transforming the description of a loc
 
 #Important concepts
 
+.pull-left[
 
 - *Spatial data*: data that directly or indirectly references a geographical area or location
 
@@ -99,7 +100,7 @@ Geocoding can be defined as the process of transforming the description of a loc
 - *Latitude*: a measurement on a globe or map of location north or south of the Equator
 
 - *Longitude*: a measurement of location east or west of the prime meridian at Greenwich
-
+]
 
 .pull-right[
 <br>
@@ -112,19 +113,70 @@ Geocoding can be defined as the process of transforming the description of a loc
 
 #Policy applications
 
-Why is geocoding relevant for public policy professionals?
+.pull-left[
 
-- **Mapping!** : Electoral vote distribution, 
-pandemic hotspots, crime trends, unemployment rates...
+###Why is geocoding relevant for public policy professionals?
 
-- Well-made maps help us recognize patterns
-and identify policy solutions.
+
+- **Mapping!** : Electoral vote distribution, pandemic hotspots, crime trends, unemployment rates...
+
+- *Present* and *analyze* data
+
+- Well-made maps help us recognize patterns and identify policy solutions
+]
+
+
+.pull-right[
 
 .pull-center[
 <br>
 <div align="center">
-<img src="https://www.bls.gov/lau/maps/aacnrt.gif" width=1000 loop=infinite>  style="position:absolute; right:10px; top:130px;">
-
+<img src="https://www.bls.gov/lau/maps/aacnrt.gif" width=1000 loop=infinite>
+]
 ]
 
 ---
+
+#Geocoding in R: intro to **sf**
+
+- **Sf** = Simple Features,  by [Edzer Pebesma](#https://www.uni-muenster.de/Geoinformatics/en/institute/staff/index.php/119/edzer_pebesma) . Combines several functionalities of previous R packages. 
+.pull-right[
+<br>
+<div align="right">
+<img src="https://user-images.githubusercontent.com/520851/34887433-ce1d130e-f7c6-11e7-83fc-d60ad4fae6bd.gif" width=200 loop=infinite> 
+]
+
+- What are **simple features**?
+  - They are a set of standards used to describe (mostly 2-dimensional) real-world objects in geographic information systems
+  - All geometries are composed of points. Points are coordinates in a 2-, 3- or 4-dimensional space.
+  - Example of sf geometry types: **point, line, polygon**
+  
+- What is a **shapefile**? A simple format for storing the geometric location and attribute information of geographic features.
+
+
+⚠️The sf package isn’t really doing the geocoding! It *takes geocoded data and translates it into the sf data format*
+
+Also: sf provides a syntax and data-structures which are coherent with the ✨tidyverse.✨ 
+
+
+---
+
+#How to: sf and geocoding
+
+What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwim5abn2q37AhWMHOwKHbwQAwAQFnoECAwQAQ&url=https%3A%2F%2Fosf.io%2Fan6b5%2Fdownload&usg=AOvVaw09ewjLkH09woLaWECSkpJC)*)
+
+
+--> 5 main groups of functions: 
+  - **Geometric confirmation**
+  - **Geometric operation**
+  - Geometry creation**
+  - Geometry operations
+  - Geometric measurement
+  
+  
+  
+---
+#Learn more: additional resources
+
+https://r-spatial.github.io/sf/articles/sf1.html 
+
