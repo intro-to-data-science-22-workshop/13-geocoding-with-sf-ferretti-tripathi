@@ -72,21 +72,59 @@ name: projects
 <html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
 
 ---
+# What is geocoding?
 
-# Taming chaos
-
-.pull-left[
-**Definition**: Geocoding can be defined as the process of transforming the description of a location (a pair of coordinates, an address) to a location on the earth's surface.
+Geocoding can be defined as the process of transforming the description of a location (a pair of coordinates, an address) to a location on the earth's surface.
 
 1. German Parliament: Platz der Republik 1, 11011 Berlin, Germany
 2. Coordinates: 52.51828, 13.37569
 3. Position on a map: 
-.pull-right[
+
+.pull-center-small2[
 <br>
 <div align="center">
-<img src="pics/bundestag.png" height=400 loop=infinite>
+<img src="https://images.adsttc.com/media/image_maps/5624/6d30/e58e/ce8b/a700/116e/large/open-uri20160107-2193-iwcf1f.jpg?1452195790" width=640 loop=infinite>
 </div>
 ]
 
+---
+
+#Important concepts
 
 
+- *Spatial data*: data that directly or indirectly references a geographical area or location
+
+- *Spatial analysis*: a process in which you model problems geographically, derive results by computer processing, and then explore and examine those results
+
+- *Latitude*: a measurement on a globe or map of location north or south of the Equator
+
+- *Longitude*: a measurement of location east or west of the prime meridian at Greenwich
+
+
+.pull-right[
+<br>
+<div align="center">
+<img src="https://keydifferences.com/wp-content/uploads/2017/02/latitude-vs-longitude2.jpg" width=265 loop=infinite>
+]
+
+
+---
+
+#Policy applications
+
+Why is geocoding relevant for public policy professionals?
+
+- **Mapping!** : Electoral vote distribution, 
+pandemic hotspots, crime trends, unemployment rates...
+
+- Well-made maps help us recognize patterns
+and identify policy solutions.
+
+.pull-center[
+<br>
+<div align="center">
+<img src="https://www.bls.gov/lau/maps/aacnrt.gif" width=1000 loop=infinite>  style="position:absolute; right:10px; top:130px;">
+
+]
+
+---
