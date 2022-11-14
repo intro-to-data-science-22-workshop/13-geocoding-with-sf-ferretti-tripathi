@@ -75,14 +75,16 @@ name: projects
 
 ---
 # What is geocoding?
-
-Geocoding can be defined as the process of transforming the description of a location (a pair of coordinates, an address) to a location on the earth's surface.
+.pull-left[
+Geocoding can be defined as **the process of transforming the description of a location (a pair of coordinates, an address) to a location on the earth's surface**.
 
 1. German Parliament: Platz der Republik 1, 11011 Berlin, Germany
 2. Coordinates: 52.51828, 13.37569
 3. Position on a map: 
+]
+--
 
-.pull-center-small2[
+.pull-right[
 <br>
 <div align="center">
 <img src="https://images.adsttc.com/media/image_maps/5624/6d30/e58e/ce8b/a700/116e/large/open-uri20160107-2193-iwcf1f.jpg?1452195790" width=640 loop=infinite>
@@ -194,6 +196,7 @@ What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=
 - Where to get data:
   - the [geocod.io API](https://www.geocod.io) (you need a (free) API key to use it! - and a couple of other packages that take a while to download). 
   - An alternative: the free, open-source Open Street Map [Nominatim API](https://nominatim.org/release-docs/develop/api/Overview/). It doesn’t require a key. The tmaptools package has a function, geocode_OSM(), to use that API.
+  - [This website](https://www.diva-gis.org/gdata) is a good resource for free geographic (GIS) data for any country in the world
   
 ---
 
@@ -201,6 +204,7 @@ What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=
 
 Install and load the following packages: 
 
+.pull-left[
 ```{r, results='hide',  message=FALSE, warning=FALSE}
 library(sf)
 library(tmaptools)
@@ -209,11 +213,15 @@ library(dplyr)
 library(knitr)
 library(kableExtra)
 ```
+]
 
+--
+
+.pull-right-small2[
 ```{r, results='hide',  message=FALSE, warning=FALSE}
-#Get the addresses of the German ministries located in Berlin: 
+#Get the addresses of the ministries in Berlin: 
 
-berlin_ministries <- c("Willy-Brandt-Strasse 1, 10557 Berlin",
+B_ministries <- c("Willy-Brandt-Strasse 1, 10557 Berlin",
                       "Werderscher Markt 1, 10117 Berlin",
                       "Wilhelmstrasse 49, 10117 Berlin",
                       "Hannoversche Strasse 28-30, 10115 Berlin",
@@ -226,66 +234,59 @@ berlin_ministries <- c("Willy-Brandt-Strasse 1, 10557 Berlin",
                       "Stresemannstraße 128, 10117 Berlin",
                       "Invalidenstraße 44, 10115 Berlin",
                       "Stauffenbergstraße 18, 10785 Berlin",
-                      "Scharnhorstraße 34 - 37, 10115 Berlin",
+                      "Scharnhorstraße 34-37, 10115 Berlin",
                       "Stresemannstraße 94, 10963 Berlin")
-                       
+```
+]
+---
+#Practical application - continued
+```{r,  message=FALSE, warning=FALSE}                       
 
+ministries_geocoded <- geocode_OSM(B_ministries)
+ministries_geocoded
+
+points <- st_as_sf(ministries_geocoded,
+                      coords = c(x = "lon", y = "lat"),
+                      crs = 4326) 
+view(points)
 ```
 ---
-[This website](https://www.diva-gis.org/gdata) is a very good resource for free geographic (GIS) data for any country in the world
+##Mapping the ministries in Berlin
 
+Download a simple Berlin map:
 ```{r, results='hide',  message=FALSE, warning=FALSE}
-germany <- "https://biogeo.ucdavis.edu/data/diva/adm/DEU_adm.zip"
+berlin_shp <- "https://tsb-opendata.s3.eu-central-1.amazonaws.com/bezirksgrenzen/bezirksgrenzen.shp.zip" 
+# Download .zip
+download.file(berlin_shp, destfile = "bezirksgrenzen.zip")
+# Unzip 
+unzip("bezirksgrenzen.zip")
+# Examine the file .zip file to find the shapefile
+list.files()
+# Save the shapefile as a data frame using the read_sf() function
+berlin_map <- sf::read_sf("bezirksgrenzen.shp") 
+view(berlin_map)
 
-#Download .zip
-download.file(germany, destfile = "DEU.zip")
- 
-#Unzip:
-unzip("DEU.zip")
- 
-#Find the shapefile and then save it as a dataframe
-germany_shp <- sf::st_read("DEU_adm1.shp")
-view(germany_shp)
 ```
-
-Note that in the "geometry" column of the dataset, you have the geometry type (multipolygon) and the coordinates (latitude and longitude)
 
 ---
-```{r, results='hide', message=FALSE, warning=FALSE}
+#Plotting the ministries
+```{r, results='hide',  message=FALSE, warning=FALSE}
+##Transforming both the shapefile and the geocoded address to sf objects and joining them
 
-
-
-sf::st_crs(germany_shp)
-
-coords <- coordinates_br %>%
-  sf::st_as_sf(coords = c("lng", "lat"), crs = 84)
-coord_geo %>%
-  dplyr::select(geometry) %>%
-  knitr::kable(col.names = c("Geometry")) %>%
-  kableExtra::kable_minimal()
-
-
-coord_geo <- coordinates_br %>%
-  sf::st_as_sf(coords = c("lng", "lat"), crs = 4326)
-coord_geo %>%
-  dplyr::select(geometry) %>%
-  knitr::kable(col.names = c("Geometry")) %>%
-  kableExtra::kable_minimal()
-
-brplot <- ggplot2::ggplot() +
-  geom_sf(data = germany_shp) +
-  geom_sf(data = coord_geo %>%
-            dplyr::filter(!is.na(capital)), color = "darkorchid4") +
-   geom_sf_label(data = coord_geo %>%
-                dplyr::filter(population_proper >= 1500000 & population_proper <= 7000000),
-                aes(label = city),  size = 3, hjust = 0, color = "darkorchid3")
+ministries_point <- st_as_sf(ministries_geocoded, coords = c(x = "lon", y = "lat"), crs = 4326)
+ministries_map <- st_join(ministries_point, berlin_map, join = st_within)
 ```
+---
  
-addresses1 <- c("492 Old Connecticut Path, Framingham, MA", 
-               "250 Northern Ave., Boston, MA")
+.pull-left[ 
+```{r, results='hide',  message=FALSE, warning=FALSE}
+tm_shape(berlin_map) +
+tm_fill() +
+tm_shape(ministries_map) +
+tm_bubbles(col = "green", size = 0.1)
+```
+]
 
-geocoded_addresses <- geocode_OSM(addresses1)
-print(geocoded_addresses[,1:3])
 ---
 #Learn more: additional resources
 

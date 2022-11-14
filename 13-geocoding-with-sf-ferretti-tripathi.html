@@ -65,14 +65,16 @@ name: projects
 
 ---
 # What is geocoding?
-
-Geocoding can be defined as the process of transforming the description of a location (a pair of coordinates, an address) to a location on the earth's surface.
+.pull-left[
+Geocoding can be defined as **the process of transforming the description of a location (a pair of coordinates, an address) to a location on the earth's surface**.
 
 1. German Parliament: Platz der Republik 1, 11011 Berlin, Germany
 2. Coordinates: 52.51828, 13.37569
 3. Position on a map: 
+]
+--
 
-.pull-center-small2[
+.pull-right[
 &lt;br&gt;
 &lt;div align="center"&gt;
 &lt;img src="https://images.adsttc.com/media/image_maps/5624/6d30/e58e/ce8b/a700/116e/large/open-uri20160107-2193-iwcf1f.jpg?1452195790" width=640 loop=infinite&gt;
@@ -184,6 +186,7 @@ What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=
 - Where to get data:
   - the [geocod.io API](https://www.geocod.io) (you need a (free) API key to use it! - and a couple of other packages that take a while to download). 
   - An alternative: the free, open-source Open Street Map [Nominatim API](https://nominatim.org/release-docs/develop/api/Overview/). It doesn’t require a key. The tmaptools package has a function, geocode_OSM(), to use that API.
+  - [This website](https://www.diva-gis.org/gdata) is a good resource for free geographic (GIS) data for any country in the world
   
 ---
 
@@ -191,42 +194,115 @@ What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=
 
 Install and load the following packages: 
 
+.pull-left[
 
 ```r
 R&gt; library(sf)
 R&gt; library(tmaptools)
 R&gt; library(tmap)
 R&gt; library(dplyr)
+R&gt; library(knitr)
+R&gt; library(kableExtra)
 ```
+]
 
-[This website](https://www.diva-gis.org/gdata) is a very good resource for free geographic (GIS) data for any country in the world
+--
 
+.pull-right-small2[
 
 ```r
-R&gt; germany &lt;- "https://biogeo.ucdavis.edu/data/diva/adm/DEU_adm.zip"
+R&gt; #Get the addresses of the ministries in Berlin: 
 R&gt; 
-R&gt; #Download .zip
-R&gt; download.file(germany, destfile = "DEU.zip")
-R&gt;  
-R&gt; #Unzip:
-R&gt; unzip("DEU.zip")
-R&gt;  
-R&gt; #Find the shapefile and then save it as a dataframe
-R&gt; germany_shp &lt;- sf::st_read("DEU_adm1.shp")
-R&gt; view(germany_shp)
+R&gt; B_ministries &lt;- c("Willy-Brandt-Strasse 1, 10557 Berlin",
++                       "Werderscher Markt 1, 10117 Berlin",
++                       "Wilhelmstrasse 49, 10117 Berlin",
++                       "Hannoversche Strasse 28-30, 10115 Berlin",
++                       "Wilhelmstraße 54, 10117 Berlin",
++                       "Glinkastraße 24, 10117 Berlin",
++                       "Wilhelmstraße 97, 10117 Berlin",
++                       "Friedrichstraße 108, 10117 Berlin",
++                       "Alt-Moabit 140, 10557 Berlin",
++                       "Mohrenstraße 37, 10117 Berlin",
++                       "Stresemannstraße 128, 10117 Berlin",
++                       "Invalidenstraße 44, 10115 Berlin",
++                       "Stauffenbergstraße 18, 10785 Berlin",
++                       "Scharnhorstraße 34-37, 10115 Berlin",
++                       "Stresemannstraße 94, 10963 Berlin")
+```
+]
+---
+#Practical application - continued
+
+```r
+R&gt; ministries_geocoded &lt;- geocode_OSM(B_ministries)
+R&gt; ministries_geocoded
 ```
 
-Note that in the "geometry" column of the dataset, you have the geometry type (multipolygon) and the coordinates (latitude and longitude)
+```
+                                         query      lat      lon  lat_min  lat_max  lon_min  lon_max
+   1      Willy-Brandt-Strasse 1, 10557 Berlin 52.52012 13.36913 52.51970 52.52062 13.36564 13.37068
+   2         Werderscher Markt 1, 10117 Berlin 52.51517 13.39905 52.51466 52.51569 13.39808 13.40002
+   3           Wilhelmstrasse 49, 10117 Berlin 52.51240 13.38426 52.51235 52.51245 13.38421 13.38431
+   4  Hannoversche Strasse 28-30, 10115 Berlin 52.52665 13.38604 52.52635 52.52697 13.38552 13.38653
+   5            Wilhelmstraße 54, 10117 Berlin 52.51377 13.38238 52.51372 52.51382 13.38233 13.38243
+   6             Glinkastraße 24, 10117 Berlin 52.51330 13.38739 52.51292 52.51367 13.38651 13.38827
+   7            Wilhelmstraße 97, 10117 Berlin 52.50863 13.38356 52.50744 52.50983 13.38206 13.38529
+   8         Friedrichstraße 108, 10117 Berlin 52.52471 13.38815 52.52448 52.52492 13.38772 13.38855
+   9              Alt-Moabit 140, 10557 Berlin 52.52184 13.36315 52.52100 52.52275 13.35995 13.36525
+   10            Mohrenstraße 37, 10117 Berlin 52.51215 13.39552 52.51162 52.51242 13.39463 13.39644
+   11       Stresemannstraße 128, 10117 Berlin 52.50802 13.37853 52.50766 52.50831 13.37795 13.37910
+   12         Invalidenstraße 44, 10115 Berlin 52.53038 13.37724 52.52913 52.53138 13.37587 13.37918
+   13      Stauffenbergstraße 18, 10785 Berlin 52.50685 13.36263 52.50681 52.50689 13.36252 13.36275
+   14        Stresemannstraße 94, 10963 Berlin 52.50538 13.38208 52.50494 52.50590 13.38106 13.38283
+```
+
+```r
+R&gt; points &lt;- st_as_sf(ministries_geocoded,
++                       coords = c(x = "lon", y = "lat"),
++                       crs = 4326) 
+R&gt; view(points)
+```
+---
+##Mapping the ministries in Berlin
+
+Download a simple Berlin map:
+
+```r
+R&gt; berlin_shp &lt;- "https://tsb-opendata.s3.eu-central-1.amazonaws.com/bezirksgrenzen/bezirksgrenzen.shp.zip" 
+R&gt; # Download .zip
+R&gt; download.file(berlin_shp, destfile = "bezirksgrenzen.zip")
+R&gt; # Unzip 
+R&gt; unzip("bezirksgrenzen.zip")
+R&gt; # Examine the file .zip file to find the shapefile
+R&gt; list.files()
+R&gt; # Save the shapefile as a data frame using the read_sf() function
+R&gt; berlin_map &lt;- sf::read_sf("bezirksgrenzen.shp") 
+R&gt; view(berlin_map)
+```
 
 ---
+#Plotting the ministries
 
+```r
+R&gt; ##Transforming both the shapefile and the geocoded address to sf objects and joining them
+R&gt; 
+R&gt; ministries_point &lt;- st_as_sf(ministries_geocoded, coords = c(x = "lon", y = "lat"), crs = 4326)
+R&gt; ministries_map &lt;- st_join(ministries_point, berlin_map, join = st_within)
+```
+---
+ 
+.pull-left[ 
 
-  
-addresses1 &lt;- c("492 Old Connecticut Path, Framingham, MA", 
-               "250 Northern Ave., Boston, MA")
+```r
+R&gt; tm_shape(berlin_map) +
++ tm_fill() +
++ tm_shape(ministries_map) +
++ tm_bubbles(col = "blue", size = 0.1)
+```
 
-geocoded_addresses &lt;- geocode_OSM(addresses1)
-print(geocoded_addresses[,1:3])
+&lt;img src="13-geocoding-with-sf-ferretti-tripathi_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+]
+
 ---
 #Learn more: additional resources
 
