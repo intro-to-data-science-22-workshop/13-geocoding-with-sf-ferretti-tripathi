@@ -16,8 +16,8 @@ The session gives an introduction to geocoding and spatial analysis. It provides
 - Visualization (plotting with SF)
 
 ## Instructors
-- Lucrezia Flavia Ferretti ([Linkedin]((https://github.com/andrewwells991](https://www.linkedin.com/in/lucrezia-flavia-ferretti-138a31148/))
-- Vishal Tripathi ([Linkedin]((https://github.com/F-CGomes](https://www.linkedin.com/in/vishaltrip/)) 
+- Lucrezia Flavia Ferretti ([Linkedin][(https://www.linkedin.com/in/lucrezia-flavia-ferretti-138a31148/)]
+- Vishal Tripathi ([Linkedin][(https://www.linkedin.com/in/vishaltrip/)] 
 
 
 ## Further resources
