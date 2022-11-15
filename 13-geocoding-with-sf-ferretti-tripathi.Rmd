@@ -267,16 +267,23 @@ B_ministries <- c("Willy-Brandt-Strasse 1, 10557 Berlin",
 ]
 ---
 #Practical application - continued
-```{r,  message=FALSE, warning=FALSE}                       
-
+```{r, message=FALSE, warning=FALSE}   
+##Geocoding the location of the ministries
 ministries_geocoded <- geocode_OSM(B_ministries)
 ministries_geocoded
+```
 
+
+---
+
+#Practical application - continued
+```{r, message=FALSE, warning=FALSE}                       
 points <- st_as_sf(ministries_geocoded,
                       coords = c(x = "lon", y = "lat"),
                       crs = 4326) 
-view(points)
+points
 ```
+
 ---
 ##Mapping the ministries in Berlin
 

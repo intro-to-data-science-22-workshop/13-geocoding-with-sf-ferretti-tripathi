@@ -261,34 +261,87 @@ R&gt; B_ministries &lt;- c("Willy-Brandt-Strasse 1, 10557 Berlin",
 #Practical application - continued
 
 ```r
+R&gt; ##Geocoding the location of the ministries
 R&gt; ministries_geocoded &lt;- geocode_OSM(B_ministries)
 R&gt; ministries_geocoded
 ```
 
 ```
-                                         query      lat      lon  lat_min  lat_max  lon_min  lon_max
-   1      Willy-Brandt-Strasse 1, 10557 Berlin 52.52012 13.36913 52.51970 52.52062 13.36564 13.37068
-   2         Werderscher Markt 1, 10117 Berlin 52.51517 13.39905 52.51466 52.51569 13.39808 13.40002
-   3           Wilhelmstrasse 49, 10117 Berlin 52.51240 13.38426 52.51235 52.51245 13.38421 13.38431
-   4  Hannoversche Strasse 28-30, 10115 Berlin 52.52665 13.38604 52.52635 52.52697 13.38552 13.38653
-   5            Wilhelmstraße 54, 10117 Berlin 52.51377 13.38238 52.51372 52.51382 13.38233 13.38243
-   6             Glinkastraße 24, 10117 Berlin 52.51330 13.38739 52.51292 52.51367 13.38651 13.38827
-   7            Wilhelmstraße 97, 10117 Berlin 52.50863 13.38356 52.50744 52.50983 13.38206 13.38529
-   8         Friedrichstraße 108, 10117 Berlin 52.52471 13.38815 52.52448 52.52492 13.38772 13.38855
-   9              Alt-Moabit 140, 10557 Berlin 52.52184 13.36315 52.52100 52.52275 13.35995 13.36525
-   10            Mohrenstraße 37, 10117 Berlin 52.51215 13.39552 52.51162 52.51242 13.39463 13.39644
-   11       Stresemannstraße 128, 10117 Berlin 52.50802 13.37853 52.50766 52.50831 13.37795 13.37910
-   12         Invalidenstraße 44, 10115 Berlin 52.53038 13.37724 52.52913 52.53138 13.37587 13.37918
-   13      Stauffenbergstraße 18, 10785 Berlin 52.50685 13.36263 52.50681 52.50689 13.36252 13.36275
-   14        Stresemannstraße 94, 10963 Berlin 52.50538 13.38208 52.50494 52.50590 13.38106 13.38283
+                                         query      lat      lon  lat_min  lat_max
+   1      Willy-Brandt-Strasse 1, 10557 Berlin 52.52012 13.36913 52.51970 52.52062
+   2         Werderscher Markt 1, 10117 Berlin 52.51517 13.39905 52.51466 52.51569
+   3           Wilhelmstrasse 49, 10117 Berlin 52.51240 13.38426 52.51235 52.51245
+   4  Hannoversche Strasse 28-30, 10115 Berlin 52.52665 13.38604 52.52635 52.52697
+   5            Wilhelmstraße 54, 10117 Berlin 52.51377 13.38238 52.51372 52.51382
+   6             Glinkastraße 24, 10117 Berlin 52.51330 13.38739 52.51292 52.51367
+   7            Wilhelmstraße 97, 10117 Berlin 52.50863 13.38356 52.50744 52.50983
+   8         Friedrichstraße 108, 10117 Berlin 52.52471 13.38815 52.52448 52.52492
+   9              Alt-Moabit 140, 10557 Berlin 52.52184 13.36315 52.52100 52.52275
+   10            Mohrenstraße 37, 10117 Berlin 52.51215 13.39552 52.51162 52.51242
+   11       Stresemannstraße 128, 10117 Berlin 52.50802 13.37853 52.50766 52.50831
+   12         Invalidenstraße 44, 10115 Berlin 52.53038 13.37724 52.52913 52.53138
+   13      Stauffenbergstraße 18, 10785 Berlin 52.50685 13.36263 52.50681 52.50689
+   14        Stresemannstraße 94, 10963 Berlin 52.50538 13.38208 52.50494 52.50590
+       lon_min  lon_max
+   1  13.36564 13.37068
+   2  13.39808 13.40002
+   3  13.38421 13.38431
+   4  13.38552 13.38653
+   5  13.38233 13.38243
+   6  13.38651 13.38827
+   7  13.38206 13.38529
+   8  13.38772 13.38855
+   9  13.35995 13.36525
+   10 13.39463 13.39644
+   11 13.37795 13.37910
+   12 13.37587 13.37918
+   13 13.36252 13.36275
+   14 13.38106 13.38283
 ```
+
+
+---
+
+#Practical application - continued
 
 ```r
 R&gt; points &lt;- st_as_sf(ministries_geocoded,
 +                       coords = c(x = "lon", y = "lat"),
 +                       crs = 4326) 
-R&gt; view(points)
+R&gt; points
 ```
+
+```
+   Simple feature collection with 14 features and 5 fields
+   Geometry type: POINT
+   Dimension:     XY
+   Bounding box:  xmin: 13.36263 ymin: 52.50538 xmax: 13.39905 ymax: 52.53038
+   Geodetic CRS:  WGS 84
+   First 10 features:
+                                         query  lat_min  lat_max  lon_min  lon_max
+   1      Willy-Brandt-Strasse 1, 10557 Berlin 52.51970 52.52062 13.36564 13.37068
+   2         Werderscher Markt 1, 10117 Berlin 52.51466 52.51569 13.39808 13.40002
+   3           Wilhelmstrasse 49, 10117 Berlin 52.51235 52.51245 13.38421 13.38431
+   4  Hannoversche Strasse 28-30, 10115 Berlin 52.52635 52.52697 13.38552 13.38653
+   5            Wilhelmstraße 54, 10117 Berlin 52.51372 52.51382 13.38233 13.38243
+   6             Glinkastraße 24, 10117 Berlin 52.51292 52.51367 13.38651 13.38827
+   7            Wilhelmstraße 97, 10117 Berlin 52.50744 52.50983 13.38206 13.38529
+   8         Friedrichstraße 108, 10117 Berlin 52.52448 52.52492 13.38772 13.38855
+   9              Alt-Moabit 140, 10557 Berlin 52.52100 52.52275 13.35995 13.36525
+   10            Mohrenstraße 37, 10117 Berlin 52.51162 52.51242 13.39463 13.39644
+                       geometry
+   1  POINT (13.36913 52.52012)
+   2  POINT (13.39905 52.51517)
+   3   POINT (13.38426 52.5124)
+   4  POINT (13.38604 52.52665)
+   5  POINT (13.38238 52.51377)
+   6   POINT (13.38739 52.5133)
+   7  POINT (13.38356 52.50863)
+   8  POINT (13.38815 52.52471)
+   9  POINT (13.36315 52.52184)
+   10 POINT (13.39552 52.51215)
+```
+
 ---
 ##Mapping the ministries in Berlin
 
@@ -327,7 +380,7 @@ R&gt; tm_shape(berlin_map) +
 + tm_bubbles(col = "green", size = 0.1)
 ```
 
-&lt;img src="13-geocoding-with-sf-ferretti-tripathi_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="13-geocoding-with-sf-ferretti-tripathi_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
