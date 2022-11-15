@@ -61,7 +61,6 @@ library(tmap)
 ##3. Geocoding in R: Intro to sf
 ##4. How to: sf 
 ##5. Practical application
-##6. To do's: prepare for the workshop
 ##5. Learn more: additional resources
 
 
@@ -171,8 +170,6 @@ name: projects
 - What is a **shapefile**? A simple format (**.shp**) for storing the geometric location and attribute information of geographic features.
 
 
-⚠️The sf package isn’t really doing the geocoding! It *takes geocoded data and translates it into the sf data format*
-
 Also: sf provides a syntax and data-structures which are coherent with the ✨tidyverse.✨ 
 
 ---
@@ -267,12 +264,14 @@ B_ministries <- c("Willy-Brandt-Strasse 1, 10557 Berlin",
 ]
 ---
 #Practical application - continued
+
+.pull-left[
 ```{r, message=FALSE, warning=FALSE}   
 ##Geocoding the location of the ministries
 ministries_geocoded <- geocode_OSM(B_ministries)
-ministries_geocoded
+ministries_geocoded %>% head(3)
 ```
-
+]
 
 ---
 
@@ -281,7 +280,7 @@ ministries_geocoded
 points <- st_as_sf(ministries_geocoded,
                       coords = c(x = "lon", y = "lat"),
                       crs = 4326) 
-points
+points %>% head(3)
 ```
 
 ---
@@ -296,23 +295,27 @@ download.file(berlin_shp, destfile = "bezirksgrenzen.zip")
 unzip("bezirksgrenzen.zip")
 # Examine the file .zip file to find the shapefile
 list.files()
-# Save the shapefile as a data frame using the read_sf() function
+# Save the shapefile as a data frame
 berlin_map <- sf::read_sf("bezirksgrenzen.shp") 
-view(berlin_map)
 
 ```
 
 ---
 #Plotting the ministries
-```{r, results='hide',  message=FALSE, warning=FALSE}
-##Transforming both the shapefile and the geocoded address to sf objects and joining them
 
+
+.pull-left[ 
+
+- Transform  the shapefile and the geocoded addresses to sf objects and join them
+
+```{r, results='hide',  message=FALSE, warning=FALSE}
 ministries_point <- st_as_sf(ministries_geocoded, coords = c(x = "lon", y = "lat"), crs = 4326)
 ministries_map <- st_join(ministries_point, berlin_map, join = st_within)
 ```
----
+]
+--
  
-.pull-left[ 
+.pull-right[ 
 ```{r, results='hide',  message=FALSE, warning=FALSE}
 tm_shape(berlin_map) +
 tm_fill() +
@@ -320,9 +323,6 @@ tm_shape(ministries_map) +
 tm_bubbles(col = "green", size = 0.1)
 ```
 ]
-
----
-
 ---
 class: inverse, center, middle
 name: projects
@@ -334,7 +334,6 @@ name: projects
 #Learn more: additional resources
 
 - [Simple Features for R](https://r-spatial.github.io/sf/articles/sf1.html)
-- [Geocoding](https://lost-stats.github.io/Geo-Spatial/geocoding.html)
 - [Geocoding with R](https://www.jessesadler.com/post/geocoding-with-r/)
 - [How to use the sf package in R](https://www.youtube.com/watch?v=2UZKm2Kc88U)
 - [Geocomputation with R](https://geocompr.robinlovelace.net/index.html)
