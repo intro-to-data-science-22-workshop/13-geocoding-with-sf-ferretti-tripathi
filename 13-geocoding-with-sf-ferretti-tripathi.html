@@ -173,7 +173,7 @@ name: projects
 
 #How to: sf and geocoding
 
-What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=&amp;ved=2ahUKEwim5abn2q37AhWMHOwKHbwQAwAQFnoECAwQAQ&amp;url=https%3A%2F%2Fosf.io%2Fan6b5%2Fdownload&amp;usg=AOvVaw09ewjLkH09woLaWECSkpJC)*)
+What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=&amp;ved=2ahUKEwiG-Z-eprD7AhXBRvEDHWlgCmQQFnoECBEQAQ&amp;url=https%3A%2F%2Fosf.io%2Fan6b5%2Fdownload&amp;usg=AOvVaw09ewjLkH09woLaWECSkpJC)*)
 
 
 --&gt; 6 main groups of functions: 
@@ -184,7 +184,7 @@ What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=
   - **Geometry creation**
     - st_point(x, c(numeric vector), dim = "XYZ") creates point geometry from numeric values
   - **Geometry operations** (=/= from geometric operation!)
-    - st_contains(x, y, ...) Identifies if x is within y (i.e. point within polygon)
+    - st_crop(x, y, ..., xmin, ymin, xmax, ymax) Creates a geometry of x that intersects a specified rectangle
   - **Geometric measurement**
     - st_area(x) Calculates the surface area of a polygon geometry based on the current coordinate reference system
   - **Miscellaneous operations**
@@ -359,7 +359,6 @@ name: projects
 #Learn more: additional resources
 
 - [Simple Features for R](https://r-spatial.github.io/sf/articles/sf1.html)
-- [Geocoding](https://lost-stats.github.io/Geo-Spatial/geocoding.html)
 - [Geocoding with R](https://www.jessesadler.com/post/geocoding-with-r/)
 - [How to use the sf package in R](https://www.youtube.com/watch?v=2UZKm2Kc88U)
 - [Geocomputation with R](https://geocompr.robinlovelace.net/index.html)

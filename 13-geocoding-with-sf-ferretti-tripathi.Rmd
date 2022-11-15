@@ -183,7 +183,7 @@ name: projects
 
 #How to: sf and geocoding
 
-What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwim5abn2q37AhWMHOwKHbwQAwAQFnoECAwQAQ&url=https%3A%2F%2Fosf.io%2Fan6b5%2Fdownload&usg=AOvVaw09ewjLkH09woLaWECSkpJC)*)
+What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiG-Z-eprD7AhXBRvEDHWlgCmQQFnoECBEQAQ&url=https%3A%2F%2Fosf.io%2Fan6b5%2Fdownload&usg=AOvVaw09ewjLkH09woLaWECSkpJC)*)
 
 
 --> 6 main groups of functions: 
@@ -194,7 +194,7 @@ What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=
   - **Geometry creation**
     - st_point(x, c(numeric vector), dim = "XYZ") creates point geometry from numeric values
   - **Geometry operations** (=/= from geometric operation!)
-    - st_contains(x, y, ...) Identifies if x is within y (i.e. point within polygon)
+    - st_crop(x, y, ..., xmin, ymin, xmax, ymax) Creates a geometry of x that intersects a specified rectangle
   - **Geometric measurement**
     - st_area(x) Calculates the surface area of a polygon geometry based on the current coordinate reference system
   - **Miscellaneous operations**
