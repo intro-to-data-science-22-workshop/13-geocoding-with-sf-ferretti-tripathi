@@ -112,8 +112,15 @@ Geocoding can be defined as **the process of transforming the description of a l
 <img src="https://keydifferences.com/wp-content/uploads/2017/02/latitude-vs-longitude2.jpg" width=265 loop=infinite>
 ]
 
+---
+class: inverse, center, middle
+name: projects
+
+# Policy applications of geocoding
+<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
 
 ---
+
 
 #Policy applications
 
@@ -138,6 +145,12 @@ Geocoding can be defined as **the process of transforming the description of a l
 <img src="https://www.bls.gov/lau/maps/aacnrt.gif" width=1000 loop=infinite>
 ]
 ]
+---
+class: inverse, center, middle
+name: projects
+
+#Geocoding in R: intro to **sf**
+<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
 
 ---
 
@@ -162,6 +175,12 @@ Geocoding can be defined as **the process of transforming the description of a l
 
 Also: sf provides a syntax and data-structures which are coherent with the ✨tidyverse.✨ 
 
+---
+class: inverse, center, middle
+name: projects
+
+#How to: sf and geocoding
+<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
 
 ---
 
@@ -198,6 +217,14 @@ What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=
   - An alternative: the free, open-source Open Street Map [Nominatim API](https://nominatim.org/release-docs/develop/api/Overview/). It doesn’t require a key. The tmaptools package has a function, geocode_OSM(), to use that API.
   - [This website](https://www.diva-gis.org/gdata) is a good resource for free geographic (GIS) data for any country in the world
   
+
+---
+class: inverse, center, middle
+name: projects
+
+#Practical application
+<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
+
 ---
 
 #Practical application
@@ -288,7 +315,23 @@ tm_bubbles(col = "green", size = 0.1)
 ]
 
 ---
+
+---
+class: inverse, center, middle
+name: projects
+
+#Learn more: additional resources
+<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
+
+---
 #Learn more: additional resources
 
-https://r-spatial.github.io/sf/articles/sf1.html 
+- [Simple Features for R](https://r-spatial.github.io/sf/articles/sf1.html)
+- [Geocoding](https://lost-stats.github.io/Geo-Spatial/geocoding.html)
+- [Geocoding with R](https://www.jessesadler.com/post/geocoding-with-r/)
+- [How to use the sf package in R](https://www.youtube.com/watch?v=2UZKm2Kc88U)
+- [Geocomputation with R](https://geocompr.robinlovelace.net/index.html)
+- [sf Package](https://cran.r-project.org/web/packages/sf/sf.pdf)
+- [Applied Spatial Data Analysis with R](https://www.springer.com/gp/book/9781461476177)
+
 

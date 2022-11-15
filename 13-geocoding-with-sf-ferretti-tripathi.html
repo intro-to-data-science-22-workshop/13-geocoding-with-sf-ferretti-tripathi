@@ -102,8 +102,15 @@ Geocoding can be defined as **the process of transforming the description of a l
 &lt;img src="https://keydifferences.com/wp-content/uploads/2017/02/latitude-vs-longitude2.jpg" width=265 loop=infinite&gt;
 ]
 
+---
+class: inverse, center, middle
+name: projects
+
+# Policy applications of geocoding
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/&gt;&lt;/html&gt;
 
 ---
+
 
 #Policy applications
 
@@ -128,6 +135,12 @@ Geocoding can be defined as **the process of transforming the description of a l
 &lt;img src="https://www.bls.gov/lau/maps/aacnrt.gif" width=1000 loop=infinite&gt;
 ]
 ]
+---
+class: inverse, center, middle
+name: projects
+
+#Geocoding in R: intro to **sf**
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/&gt;&lt;/html&gt;
 
 ---
 
@@ -152,6 +165,12 @@ Geocoding can be defined as **the process of transforming the description of a l
 
 Also: sf provides a syntax and data-structures which are coherent with the ✨tidyverse.✨ 
 
+---
+class: inverse, center, middle
+name: projects
+
+#How to: sf and geocoding
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/&gt;&lt;/html&gt;
 
 ---
 
@@ -188,6 +207,14 @@ What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=
   - An alternative: the free, open-source Open Street Map [Nominatim API](https://nominatim.org/release-docs/develop/api/Overview/). It doesn’t require a key. The tmaptools package has a function, geocode_OSM(), to use that API.
   - [This website](https://www.diva-gis.org/gdata) is a good resource for free geographic (GIS) data for any country in the world
   
+
+---
+class: inverse, center, middle
+name: projects
+
+#Practical application
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/&gt;&lt;/html&gt;
+
 ---
 
 #Practical application
@@ -297,16 +324,32 @@ R&gt; ministries_map &lt;- st_join(ministries_point, berlin_map, join = st_withi
 R&gt; tm_shape(berlin_map) +
 + tm_fill() +
 + tm_shape(ministries_map) +
-+ tm_bubbles(col = "blue", size = 0.1)
++ tm_bubbles(col = "green", size = 0.1)
 ```
 
 &lt;img src="13-geocoding-with-sf-ferretti-tripathi_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
+
+---
+class: inverse, center, middle
+name: projects
+
+#Learn more: additional resources
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/&gt;&lt;/html&gt;
+
+---
 #Learn more: additional resources
 
-https://r-spatial.github.io/sf/articles/sf1.html 
+- [Simple Features for R](https://r-spatial.github.io/sf/articles/sf1.html)
+- [Geocoding](https://lost-stats.github.io/Geo-Spatial/geocoding.html)
+- [Geocoding with R](https://www.jessesadler.com/post/geocoding-with-r/)
+- [How to use the sf package in R](https://www.youtube.com/watch?v=2UZKm2Kc88U)
+- [Geocomputation with R](https://geocompr.robinlovelace.net/index.html)
+- [sf Package](https://cran.r-project.org/web/packages/sf/sf.pdf)
+- [Applied Spatial Data Analysis with R](https://www.springer.com/gp/book/9781461476177)
+
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
