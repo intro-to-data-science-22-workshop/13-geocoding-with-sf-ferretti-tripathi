@@ -1,0 +1,257 @@
+---
+title: "Geocoding with 'sf' - An Introduction"
+author: "Lucrezia Flavia Ferretti and Vishal Tripathi"
+date: '2022-11-14'
+output: 
+ html_document:
+    toc: TRUE
+    df_print: paged
+    number_sections: FALSE
+    highlight: monochrome
+    theme: yeti
+    toc_depth: 3
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE}
+library(tidyverse)
+library(sf)
+library(tmap)
+library(tm)
+library(tmaptools)
+library(stringr)
+library(rvest)
+
+options(scipen = 999)
+```
+
+***
+
+# Introduction
+
+In geocoding, a name or address of a location is converted into a geographic location on the surface of the earth. This means that if you have an address, a location, or a landmark, R functions help you convert them into coordinates and then pin them on a map.
+
+In this tutorial, we will show you some simple use cases of 'sf' package to help you get a feel of its functionalities. Once you feel comfortable with the basics, we would welcome you to explore more sources. In addition to various useful R workbooks that Lufla mentioned in her presentation slides, this comprehensive tutorial from the Hertie School Data Science Summer School is highly recommended! - https://www.youtube.com/watch?v=GjTmvivY1yw
+
+Let's begin!
+
+# Using geocode_OSM() to find coordinates
+
+First, let's learn to use the 'geocode_OSM()' functions from 'tmap' package to convert a vector of names/addresses into a their corresponding longitudes and latitudes. All of these addresses and places are stored in a single vector. After that, we use the geocode OSM() function on it and it returns a vector with their geolocations!
+
+For example, let's try to geocode the locations of the "7 Wonders of the World". Can you name them all? 
+
+***
+
+```{r}
+#Finding out the coordinates of the Seven Wonders of the World!
+
+seven_wonders_locations <- c("Great Wall of China",
+               "Chichén Itzá, Mexico",
+               "Petra, Jordan",
+               "Machu Picchu, Peru",
+               "Christ the Redeemer, Brazil",
+               "Colosseum, Italy",
+               "Taj Mahal, India") 
+
+geocoded_seven_wonders <- geocode_OSM(seven_wonders_locations) 
+
+geocoded_seven_wonders
+
+```
+
+***
+
+# Creating sf object using st_as_sf()
+
+Now that we have the coordinates of the 7 Wonders in dataframe, we  need to convert this dataframe into a 'sf' object to allow us to use the functions of the 'sf' package on it. The 'st_as_sf()' function does exactly that. 
+
+One thing to keep in mind while using sf objects is the 'Coordinate Reference System' or CRS key. The World Geodetic System (WGS) is a standard for use in cartography, geodesy, and satellite navigation including GPS. For 2D, the CRS used by it is 4326. Most shapefiles you will find on the internet will have this by default. You can also check it by using 'st_crs()' function. So while using 'st_as_sf()', we always set the crs = 4326.
+
+***
+
+```{r}
+
+#Using st_as_sf() function to store geometry of the locations
+
+geometry_seven_wonders <- st_as_sf(geocoded_seven_wonders,
+                      coords = c(x = "lon", y = "lat"),
+                      crs = 4326)
+
+geometry_seven_wonders
+
+```
+
+***
+
+# Downloading and Reading 'Shapefiles'
+
+Now that the geometry of each of our locations is stored as an 'sf' object, we now need a map to pin them on. These maps are available on the internet in the form of "shapefiles". A simple Google search will easily help you find these shapefiles.
+
+You can either write a simple code in R to download these directly from online repositories or simply download them like any other file. These files should be stored in a folder (we have stored it in a folder named 'Data') in your R working directory. 
+
+You can then use the 'st_read()' function to read the shapefile and qtm() function to see a Quick Thematic Map of your file. The good old ggplot package can also read sf objects when coupled with geom_sf(). 
+
+***
+
+```{r}
+
+world_land <- st_read("Data/ne_50m_land.shp")
+
+qtm(world_land) #explore the shapefile with a quick thematic view
+
+```
+```{r}
+
+ggplot(world_land) + geom_sf() + theme_minimal() # Or do the same using ggplot
+
+```
+
+<br>
+
+***
+
+# Using tm_shape() function to plot our maps 
+
+***
+
+```{r}
+
+tm_shape(world_land) + #First layer is the world map
+  tm_fill(col = "lightblue") +
+tm_shape (geometry_seven_wonders) + #Second layer is the locations of the 7 Wonders
+  tm_markers(size = 0.1) +
+  tm_text("query", size = 0.5) + 
+  tm_layout(main.title= 'The 7 Wonders of the World', 
+            main.title.position = c('centre', 'top'))
+  
+```
+<br>
+
+***
+
+You can also use Web Scraping to store the names of places in a dataframe and then geocode them!
+
+For example, can you map the "Best Locations in Germany to visit during winters" from this link? Here: (https://theculturetrip.com/europe/germany/articles/the-9-most-beautiful-destinations-to-visit-in-germany-this-winter/). For this, we will need to download the shapefile of Germany. The Eurostat website is an excellent resource for this: https://ec.europa.eu/eurostat/web/gisco/geodata
+
+***
+
+```{r}
+
+DEU_land <- st_read("Data/DEU_adm0.shp")
+
+qtm(DEU_land)
+
+culture_trip <- read_html("https://theculturetrip.com/europe/germany/articles/the-9-most-beautiful-destinations-to-visit-in-germany-this-winter/")
+
+top_places_DE <- culture_trip %>%
+  html_elements(xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "cJKYFd", " " ))]') %>%
+  html_text2() #scraping our data
+
+top_places_DE #checking scraped data
+
+geocoded_top_places_DE <- geocode_OSM(top_places_DE)#geocoding our scraped data
+
+geometry_top_places_DE <- st_as_sf(geocoded_top_places_DE, #transforming into sf object
+                      coords = c(x = "lon", y = "lat"),
+                      crs = 4326)
+
+tm_shape(DEU_land) +   #First layer is the map of Germany
+  tm_fill(col = "lightblue") +
+tm_shape (geometry_top_places_DE) +  #Second layer is the locations we scraped
+  tm_markers(size = 0.1) +
+  tm_text("query", size = 0.5) +
+  tm_layout(main.title= 'Best Places to Visit', 
+            main.title.position = c('centre', 'top'))
+
+
+```
+
+***
+
+Now let's go a little deeper. Shapefiles are not just about cartographic outlines but can also have a lot of other information stored in them (like a dataframe!). It is entorely possible that you can find a shapefile with names of facilities, roads, rivers and even socio-economic data of the region also stored in them.
+
+To show this, we have downloaded another shapefile of Germany with names of all states, districts and even their classification (rural vs urban) stored in it. It is advisable to explore a shapefile, not just visually via qtm() but also through View() function (just like you do with a dataframe). In the example below, we will show how to use plot() function to color code different Federal States of Germany using the information stored within it.
+
+***
+
+```{r}
+
+DEU_states <- st_read("Data/DEU_adm3.shp")
+
+qtm(DEU_states) #visual exploration
+
+# View(DEU_states) #exploring the shapefile and the information in it
+
+plot(DEU_states['NAME_1'], #the column name which has names of Federal States 
+     main = "Federal States of Germany",
+     key.length = 0.9,
+     key.width = lcm(7)) 
+
+```
+
+***
+
+# Plotting maps using external data sets
+
+Finally, let's explore another use case where geocoding is extremely helpful. Suppose you are working in your home country and you have some administrative or survey data that you want to visualise on a map. This will require you to attach this external dataset to an sf object. Thankfully, all the 'Tidyverse' functions work with sf objects too! You simply have to join your external data with your sf object and plot it.
+
+To illustrate this, we have downloaded the "Alcohol Consumption Per Capita" data from 'Our World in Data' (https://ourworldindata.org/) and a shapefile of the world with country boundaries from Natural Earth (https://www.naturalearthdata.com/downloads/). We will use dplyr functions to join it with our sf object and ...voila!
+
+***
+
+```{r}
+world <- st_read("Data/world-administrative-boundaries.shp")
+
+alcohol_cons <- read.csv("alcohol_country.csv")
+
+#dplyr works perfectly with sf objects
+
+plot_data <- dplyr::filter(world, status == 'Member State') %>%
+        dplyr::left_join(., alcohol_cons, by="name") 
+
+plot(plot_data['tot_alco_pc'],
+     main = "Alcohol Consumption Per Capita (in Litres)")
+
+
+```
+
+***
+
+# Changing 'Bounding Box' parameters
+
+Before we end this tutorial, we would like to mention a challenge you may face while dealing with some shapefiles. We discovered this while exploring the shapefiles that Ministry of Rural Development of Government of India released recently (https://geosadak-pmgsy.nic.in/OpenData) under its open data licence. While exploring the data, we realized that the 'bounding box parameters' of it were by default set to values that made visualization difficult. 
+
+A bounding box (shortened to 'bbox') is an area defined by two longitudes and two latitudes, where: 
+a) Latitude is a decimal number between -90.0 and 90.0.
+b) Longitude is a decimal number between -180.0 and 180.0.
+
+We encountered the same problem with some other shapefiles that we downloaded as well. So we figured out a way to change the default bbox parameters a desired value which allows optimal visualization.
+
+***
+
+```{r}
+
+UP_Facilities <- st_read("Data/UP_Facilities.shp")
+
+qtm(UP_Facilities)
+
+#Sometimes, the shapefile you use may have different Bounding Box parameters. But you can change them to suit your requirement!
+
+new_bb = c(77, 23, 85, 31)
+attr(new_bb, "class") = "bbox"
+attr(st_geometry(UP_Facilities), "bbox") = new_bb
+
+qtm(UP_Facilities)
+
+```
+
+***
+
+That's all folks! We hope you enjoyed the tutorial and will go away for it having learnt some key functions of the sf package. Thanks a lot for your attention!
+
+***
