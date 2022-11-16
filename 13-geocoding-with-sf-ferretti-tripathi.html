@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Geocoding</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Lucrezia Flavia Ferretti and Vishal Tripathi" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="simons-touch.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Geocoding
+]
+.subtitle[
+## with the Simple Features (sf) package
+]
+.author[
+### Lucrezia Flavia Ferretti and Vishal Tripathi
+]
+.institute[
+### Hertie School
+]
+.date[
+### 21/11/2022
+]
+
+---
+
+
+&lt;style type="text/css"&gt;
+@media print { # print out incremental slides; see https://stackoverflow.com/questions/56373198/get-xaringan-incremental-animations-to-print-to-pdf/56374619#56374619
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+
+# Table of contents
+
+
+##1. What is geocoding?
+##2. Policy applications of geocoding 
+##3. Geocoding in R: Intro to sf
+##4. How to: sf 
+##5. Practical application
+##5. Learn more: additional resources
+
+
+
+---
+class: inverse, center, middle
+name: projects
+
+# What is geocoding?
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/&gt;&lt;/html&gt;
+
+---
+# What is geocoding?
+.pull-left[
+Geocoding can be defined as **the process of transforming the description of a location (a pair of coordinates, an address) to a location on the earth's surface**.
+
+1. German Parliament: Platz der Republik 1, 11011 Berlin, Germany
+2. Coordinates: 52.51828, 13.37569
+3. Position on a map: 
+]
+--
+
+.pull-right[
+&lt;br&gt;
+&lt;div align="center"&gt;
+&lt;img src="https://images.adsttc.com/media/image_maps/5624/6d30/e58e/ce8b/a700/116e/large/open-uri20160107-2193-iwcf1f.jpg?1452195790" width=640 loop=infinite&gt;
+&lt;/div&gt;
+]
+
+---
+
+#Important concepts
+
+.pull-left[
+
+- *Spatial data*: data that directly or indirectly references a geographical area or location
+
+- *Spatial analysis*: a process in which you model problems geographically, derive results by computer processing, and then explore and examine those results
+
+- *Latitude*: a measurement on a globe or map of location north or south of the Equator
+
+- *Longitude*: a measurement of location east or west of the prime meridian at Greenwich
+]
+
+.pull-right[
+&lt;br&gt;
+&lt;div align="center"&gt;
+&lt;img src="https://keydifferences.com/wp-content/uploads/2017/02/latitude-vs-longitude2.jpg" width=265 loop=infinite&gt;
+]
+
+---
+class: inverse, center, middle
+name: projects
+
+# Policy applications of geocoding
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/&gt;&lt;/html&gt;
+
+---
+
+
+#Policy applications
+
+.pull-left[
+
+###Why is geocoding relevant for public policy professionals?
+
+
+- **Mapping!** : Electoral vote distribution, pandemic hotspots, crime trends, unemployment rates...
+
+- *Present* and *analyze* data
+
+- Well-made maps help us recognize patterns and identify policy solutions
+]
+
+
+.pull-right[
+
+.pull-center[
+&lt;br&gt;
+&lt;div align="center"&gt;
+&lt;img src="https://www.bls.gov/lau/maps/aacnrt.gif" width=1000 loop=infinite&gt;
+]
+]
+---
+class: inverse, center, middle
+name: projects
+
+#Geocoding in R: intro to **sf**
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/&gt;&lt;/html&gt;
+
+---
+
+#Geocoding in R: intro to **sf**
+
+- **Sf** = Simple Features,  by [Edzer Pebesma](#https://www.uni-muenster.de/Geoinformatics/en/institute/staff/index.php/119/edzer_pebesma) . Combines several functionalities of previous R packages. 
+.pull-right[
+&lt;br&gt;
+&lt;div align="right"&gt;
+&lt;img src="https://user-images.githubusercontent.com/520851/34887433-ce1d130e-f7c6-11e7-83fc-d60ad4fae6bd.gif" width=200 loop=infinite&gt; 
+]
+
+- What are **simple features**?
+  - They are a set of standards used to describe (mostly 2-dimensional) real-world objects in geographic information systems
+  - All geometries are composed of points. Points are coordinates in a 2-, 3- or 4-dimensional space.
+  - Example of sf geometry types: **point, line, polygon**
+  
+- What is a **shapefile**? A simple format (**.shp**) for storing the geometric location and attribute information of geographic features.
+
+
+Also: sf provides a syntax and data-structures which are coherent with the ✨tidyverse.✨ 
+
+---
+class: inverse, center, middle
+name: projects
+
+#How to: sf and geocoding
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/&gt;&lt;/html&gt;
+
+---
+
+#How to: sf and geocoding
+
+What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=&amp;ved=2ahUKEwiG-Z-eprD7AhXBRvEDHWlgCmQQFnoECBEQAQ&amp;url=https%3A%2F%2Fosf.io%2Fan6b5%2Fdownload&amp;usg=AOvVaw09ewjLkH09woLaWECSkpJC)*)
+
+
+--&gt; 6 main groups of functions: 
+  - **Geometric confirmation**
+    - the function st_contains(x, y, ...) Identifies whether x is within y (i.e. point within polygon)
+  - **Geometric operation**
+    - the function st_boundary(x) Creates a polygon that encompasses the full extent of the geometry
+  - **Geometry creation**
+    - st_point(x, c(numeric vector), dim = "XYZ") creates point geometry from numeric values
+  - **Geometry operations** (=/= from geometric operation!)
+    - st_crop(x, y, ..., xmin, ymin, xmax, ymax) Creates a geometry of x that intersects a specified rectangle
+  - **Geometric measurement**
+    - st_area(x) Calculates the surface area of a polygon geometry based on the current coordinate reference system
+  - **Miscellaneous operations**
+    - st_cast(x, to, ...) Changes x geometry to a different geometry type
+  
+---
+#Geocoding in R: continued
+
+- What you need: **data**!
+
+- When geocoding, you can have 2 different kinds of data: *relative* and *absolute*. 
+  - *Relative data*: cannot be converted into geographic data points (for example "the German Parliament is located by the Spree river")
+  - *Absolute data*: can "stand alone" and can be converted into coordinates (for example, Platz der Republik 1, 11011 Berlin, Germany)
+  
+- Where to get data:
+  - the [geocod.io API](https://www.geocod.io) (you need a (free) API key to use it! - and a couple of other packages that take a while to download). 
+  - An alternative: the free, open-source Open Street Map [Nominatim API](https://nominatim.org/release-docs/develop/api/Overview/). It doesn’t require a key. The tmaptools package has a function, geocode_OSM(), to use that API.
+  - [This website](https://www.diva-gis.org/gdata) is a good resource for free geographic (GIS) data for any country in the world
+  
+
+---
+class: inverse, center, middle
+name: projects
+
+#Practical application
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/&gt;&lt;/html&gt;
+
+---
+
+#Practical application
+
+Install and load the following packages: 
+
+.pull-left[
+
+```r
+R&gt; library(sf)
+R&gt; library(tmaptools)
+R&gt; library(tmap)
+R&gt; library(dplyr)
+R&gt; library(knitr)
+R&gt; library(kableExtra)
+```
+]
+
+--
+
+.pull-right-small2[
+
+```r
+R&gt; #Get the addresses of the ministries in Berlin: 
+R&gt; 
+R&gt; B_ministries &lt;- c("Willy-Brandt-Strasse 1, 10557 Berlin",
++                       "Werderscher Markt 1, 10117 Berlin",
++                       "Wilhelmstrasse 49, 10117 Berlin",
++                       "Hannoversche Strasse 28-30, 10115 Berlin",
++                       "Wilhelmstraße 54, 10117 Berlin",
++                       "Glinkastraße 24, 10117 Berlin",
++                       "Wilhelmstraße 97, 10117 Berlin",
++                       "Friedrichstraße 108, 10117 Berlin",
++                       "Alt-Moabit 140, 10557 Berlin",
++                       "Mohrenstraße 37, 10117 Berlin",
++                       "Stresemannstraße 128, 10117 Berlin",
++                       "Invalidenstraße 44, 10115 Berlin",
++                       "Stauffenbergstraße 18, 10785 Berlin",
++                       "Scharnhorstraße 34-37, 10115 Berlin",
++                       "Stresemannstraße 94, 10963 Berlin")
+```
+]
+---
+#Practical application - continued
+
+.pull-left[
+
+```r
+R&gt; ##Geocoding the location of the ministries
+R&gt; ministries_geocoded &lt;- geocode_OSM(B_ministries)
+R&gt; ministries_geocoded %&gt;% head(3)
+```
+
+```
+                                    query      lat      lon  lat_min  lat_max
+   1 Willy-Brandt-Strasse 1, 10557 Berlin 52.52012 13.36913 52.51970 52.52062
+   2    Werderscher Markt 1, 10117 Berlin 52.51517 13.39905 52.51466 52.51569
+   3      Wilhelmstrasse 49, 10117 Berlin 52.51240 13.38426 52.51235 52.51245
+      lon_min  lon_max
+   1 13.36564 13.37068
+   2 13.39808 13.40002
+   3 13.38421 13.38431
+```
+]
+
+---
+
+#Practical application - continued
+
+```r
+R&gt; points &lt;- st_as_sf(ministries_geocoded,
++                       coords = c(x = "lon", y = "lat"),
++                       crs = 4326) 
+R&gt; points %&gt;% head(3)
+```
+
+```
+   Simple feature collection with 3 features and 5 fields
+   Geometry type: POINT
+   Dimension:     XY
+   Bounding box:  xmin: 13.36913 ymin: 52.5124 xmax: 13.39905 ymax: 52.52012
+   Geodetic CRS:  WGS 84
+                                    query  lat_min  lat_max  lon_min  lon_max
+   1 Willy-Brandt-Strasse 1, 10557 Berlin 52.51970 52.52062 13.36564 13.37068
+   2    Werderscher Markt 1, 10117 Berlin 52.51466 52.51569 13.39808 13.40002
+   3      Wilhelmstrasse 49, 10117 Berlin 52.51235 52.51245 13.38421 13.38431
+                      geometry
+   1 POINT (13.36913 52.52012)
+   2 POINT (13.39905 52.51517)
+   3  POINT (13.38426 52.5124)
+```
+
+---
+##Mapping the ministries in Berlin
+
+Download a simple Berlin map:
+
+```r
+R&gt; berlin_shp &lt;- "https://tsb-opendata.s3.eu-central-1.amazonaws.com/bezirksgrenzen/bezirksgrenzen.shp.zip" 
+R&gt; # Download .zip
+R&gt; download.file(berlin_shp, destfile = "bezirksgrenzen.zip")
+R&gt; # Unzip 
+R&gt; unzip("bezirksgrenzen.zip")
+R&gt; # Examine the file .zip file to find the shapefile
+R&gt; list.files()
+R&gt; # Save the shapefile as a data frame
+R&gt; berlin_map &lt;- sf::read_sf("bezirksgrenzen.shp") 
+```
+
+---
+#Plotting the ministries
+
+
+.pull-left[ 
+
+- Transform  the shapefile and the geocoded addresses to sf objects and join them
+
+
+```r
+R&gt; ministries_point &lt;- st_as_sf(ministries_geocoded, coords = c(x = "lon", y = "lat"), crs = 4326)
+R&gt; ministries_map &lt;- st_join(ministries_point, berlin_map, join = st_within)
+```
+]
+--
+ 
+.pull-right[ 
+
+```r
+R&gt; tm_shape(berlin_map) +
++ tm_fill() +
++ tm_shape(ministries_map) +
++ tm_bubbles(col = "green", size = 0.1)
+```
+
+&lt;img src="13-geocoding-with-sf-ferretti-tripathi_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+]
+---
+class: inverse, center, middle
+name: projects
+
+#Learn more: additional resources
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/&gt;&lt;/html&gt;
+
+---
+#Learn more: additional resources
+
+- [Simple Features for R](https://r-spatial.github.io/sf/articles/sf1.html)
+- [Geocoding with R](https://www.jessesadler.com/post/geocoding-with-r/)
+- [How to use the sf package in R](https://www.youtube.com/watch?v=2UZKm2Kc88U)
+- [Geocomputation with R](https://geocompr.robinlovelace.net/index.html)
+- [sf Package](https://cran.r-project.org/web/packages/sf/sf.pdf)
+- [Applied Spatial Data Analysis with R](https://www.springer.com/gp/book/9781461476177)
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"hash": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -46,9 +46,11 @@ knit_hooks$set(
       )
 })
 library(tidyverse)
-library(nycflights13)
 library(modelsummary)
 library(kableExtra)
+library(XML)
+library(tmaptools)
+library(tmap)
 ```
 
 # Table of contents
@@ -59,7 +61,6 @@ library(kableExtra)
 ##3. Geocoding in R: Intro to sf
 ##4. How to: sf 
 ##5. Practical application
-##6. To do's: prepare for the workshop
 ##5. Learn more: additional resources
 
 
@@ -72,21 +73,271 @@ name: projects
 <html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
 
 ---
-
-# Taming chaos
-
+# What is geocoding?
 .pull-left[
-**Definition**: Geocoding can be defined as the process of transforming the description of a location (a pair of coordinates, an address) to a location on the earth's surface.
+Geocoding can be defined as **the process of transforming the description of a location (a pair of coordinates, an address) to a location on the earth's surface**.
 
 1. German Parliament: Platz der Republik 1, 11011 Berlin, Germany
 2. Coordinates: 52.51828, 13.37569
 3. Position on a map: 
+]
+--
+
 .pull-right[
 <br>
 <div align="center">
-<img src="pics/bundestag.png" height=400 loop=infinite>
+<img src="https://images.adsttc.com/media/image_maps/5624/6d30/e58e/ce8b/a700/116e/large/open-uri20160107-2193-iwcf1f.jpg?1452195790" width=640 loop=infinite>
 </div>
 ]
 
+---
+
+#Important concepts
+
+.pull-left[
+
+- *Spatial data*: data that directly or indirectly references a geographical area or location
+
+- *Spatial analysis*: a process in which you model problems geographically, derive results by computer processing, and then explore and examine those results
+
+- *Latitude*: a measurement on a globe or map of location north or south of the Equator
+
+- *Longitude*: a measurement of location east or west of the prime meridian at Greenwich
+]
+
+.pull-right[
+<br>
+<div align="center">
+<img src="https://keydifferences.com/wp-content/uploads/2017/02/latitude-vs-longitude2.jpg" width=265 loop=infinite>
+]
+
+---
+class: inverse, center, middle
+name: projects
+
+# Policy applications of geocoding
+<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
+
+---
+
+
+#Policy applications
+
+.pull-left[
+
+###Why is geocoding relevant for public policy professionals?
+
+
+- **Mapping!** : Electoral vote distribution, pandemic hotspots, crime trends, unemployment rates...
+
+- *Present* and *analyze* data
+
+- Well-made maps help us recognize patterns and identify policy solutions
+]
+
+
+.pull-right[
+
+.pull-center[
+<br>
+<div align="center">
+<img src="https://www.bls.gov/lau/maps/aacnrt.gif" width=1000 loop=infinite>
+]
+]
+---
+class: inverse, center, middle
+name: projects
+
+#Geocoding in R: intro to **sf**
+<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
+
+---
+
+#Geocoding in R: intro to **sf**
+
+- **Sf** = Simple Features,  by [Edzer Pebesma](#https://www.uni-muenster.de/Geoinformatics/en/institute/staff/index.php/119/edzer_pebesma) . Combines several functionalities of previous R packages. 
+.pull-right[
+<br>
+<div align="right">
+<img src="https://user-images.githubusercontent.com/520851/34887433-ce1d130e-f7c6-11e7-83fc-d60ad4fae6bd.gif" width=200 loop=infinite> 
+]
+
+- What are **simple features**?
+  - They are a set of standards used to describe (mostly 2-dimensional) real-world objects in geographic information systems
+  - All geometries are composed of points. Points are coordinates in a 2-, 3- or 4-dimensional space.
+  - Example of sf geometry types: **point, line, polygon**
+  
+- What is a **shapefile**? A simple format (**.shp**) for storing the geometric location and attribute information of geographic features.
+
+
+Also: sf provides a syntax and data-structures which are coherent with the ✨tidyverse.✨ 
+
+---
+class: inverse, center, middle
+name: projects
+
+#How to: sf and geocoding
+<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
+
+---
+
+#How to: sf and geocoding
+
+What does sf do? (*see more in [this cheat sheet](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiG-Z-eprD7AhXBRvEDHWlgCmQQFnoECBEQAQ&url=https%3A%2F%2Fosf.io%2Fan6b5%2Fdownload&usg=AOvVaw09ewjLkH09woLaWECSkpJC)*)
+
+
+--> 6 main groups of functions: 
+  - **Geometric confirmation**
+    - the function st_contains(x, y, ...) Identifies whether x is within y (i.e. point within polygon)
+  - **Geometric operation**
+    - the function st_boundary(x) Creates a polygon that encompasses the full extent of the geometry
+  - **Geometry creation**
+    - st_point(x, c(numeric vector), dim = "XYZ") creates point geometry from numeric values
+  - **Geometry operations** (=/= from geometric operation!)
+    - st_crop(x, y, ..., xmin, ymin, xmax, ymax) Creates a geometry of x that intersects a specified rectangle
+  - **Geometric measurement**
+    - st_area(x) Calculates the surface area of a polygon geometry based on the current coordinate reference system
+  - **Miscellaneous operations**
+    - st_cast(x, to, ...) Changes x geometry to a different geometry type
+  
+---
+#Geocoding in R: continued
+
+- What you need: **data**!
+
+- When geocoding, you can have 2 different kinds of data: *relative* and *absolute*. 
+  - *Relative data*: cannot be converted into geographic data points (for example "the German Parliament is located by the Spree river")
+  - *Absolute data*: can "stand alone" and can be converted into coordinates (for example, Platz der Republik 1, 11011 Berlin, Germany)
+  
+- Where to get data:
+  - the [geocod.io API](https://www.geocod.io) (you need a (free) API key to use it! - and a couple of other packages that take a while to download). 
+  - An alternative: the free, open-source Open Street Map [Nominatim API](https://nominatim.org/release-docs/develop/api/Overview/). It doesn’t require a key. The tmaptools package has a function, geocode_OSM(), to use that API.
+  - [This website](https://www.diva-gis.org/gdata) is a good resource for free geographic (GIS) data for any country in the world
+  
+
+---
+class: inverse, center, middle
+name: projects
+
+#Practical application
+<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
+
+---
+
+#Practical application
+
+Install and load the following packages: 
+
+.pull-left[
+```{r, results='hide',  message=FALSE, warning=FALSE}
+library(sf)
+library(tmaptools)
+library(tmap)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+```
+]
+
+--
+
+.pull-right-small2[
+```{r, results='hide',  message=FALSE, warning=FALSE}
+#Get the addresses of the ministries in Berlin: 
+
+B_ministries <- c("Willy-Brandt-Strasse 1, 10557 Berlin",
+                      "Werderscher Markt 1, 10117 Berlin",
+                      "Wilhelmstrasse 49, 10117 Berlin",
+                      "Hannoversche Strasse 28-30, 10115 Berlin",
+                      "Wilhelmstraße 54, 10117 Berlin",
+                      "Glinkastraße 24, 10117 Berlin",
+                      "Wilhelmstraße 97, 10117 Berlin",
+                      "Friedrichstraße 108, 10117 Berlin",
+                      "Alt-Moabit 140, 10557 Berlin",
+                      "Mohrenstraße 37, 10117 Berlin",
+                      "Stresemannstraße 128, 10117 Berlin",
+                      "Invalidenstraße 44, 10115 Berlin",
+                      "Stauffenbergstraße 18, 10785 Berlin",
+                      "Scharnhorstraße 34-37, 10115 Berlin",
+                      "Stresemannstraße 94, 10963 Berlin")
+```
+]
+---
+#Practical application - continued
+
+.pull-left[
+```{r, message=FALSE, warning=FALSE}   
+##Geocoding the location of the ministries
+ministries_geocoded <- geocode_OSM(B_ministries)
+ministries_geocoded %>% head(3)
+```
+]
+
+---
+
+#Practical application - continued
+```{r, message=FALSE, warning=FALSE}                       
+points <- st_as_sf(ministries_geocoded,
+                      coords = c(x = "lon", y = "lat"),
+                      crs = 4326) 
+points %>% head(3)
+```
+
+---
+##Mapping the ministries in Berlin
+
+Download a simple Berlin map:
+```{r, results='hide',  message=FALSE, warning=FALSE}
+berlin_shp <- "https://tsb-opendata.s3.eu-central-1.amazonaws.com/bezirksgrenzen/bezirksgrenzen.shp.zip" 
+# Download .zip
+download.file(berlin_shp, destfile = "bezirksgrenzen.zip")
+# Unzip 
+unzip("bezirksgrenzen.zip")
+# Examine the file .zip file to find the shapefile
+list.files()
+# Save the shapefile as a data frame
+berlin_map <- sf::read_sf("bezirksgrenzen.shp") 
+
+```
+
+---
+#Plotting the ministries
+
+
+.pull-left[ 
+
+- Transform  the shapefile and the geocoded addresses to sf objects and join them
+
+```{r, results='hide',  message=FALSE, warning=FALSE}
+ministries_point <- st_as_sf(ministries_geocoded, coords = c(x = "lon", y = "lat"), crs = 4326)
+ministries_map <- st_join(ministries_point, berlin_map, join = st_within)
+```
+]
+--
+ 
+.pull-right[ 
+```{r, results='hide',  message=FALSE, warning=FALSE}
+tm_shape(berlin_map) +
+tm_fill() +
+tm_shape(ministries_map) +
+tm_bubbles(col = "green", size = 0.1)
+```
+]
+---
+class: inverse, center, middle
+name: projects
+
+#Learn more: additional resources
+<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
+
+---
+#Learn more: additional resources
+
+- [Simple Features for R](https://r-spatial.github.io/sf/articles/sf1.html)
+- [Geocoding with R](https://www.jessesadler.com/post/geocoding-with-r/)
+- [How to use the sf package in R](https://www.youtube.com/watch?v=2UZKm2Kc88U)
+- [Geocomputation with R](https://geocompr.robinlovelace.net/index.html)
+- [sf Package](https://cran.r-project.org/web/packages/sf/sf.pdf)
+- [Applied Spatial Data Analysis with R](https://www.springer.com/gp/book/9781461476177)
 
 
